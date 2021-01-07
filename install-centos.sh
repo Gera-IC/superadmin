@@ -75,11 +75,11 @@ if [[ "$userConsent" == "y" || "$userConsent" == "Y" ]]; then
 	echo "baseurl=http://nginx.org/packages/centos/\$releasever/\$basearch/" >> /etc/yum.repos.d/nginx.repo
 	echo "gpgcheck=0" >> /etc/yum.repos.d/nginx.repo
 	echo "enabled=1" >> /etc/yum.repos.d/nginx.repo
-	curl --silent --location https://rpm.nodesource.com/setup_8.x | bash -
+	curl -sL https://rpm.nodesource.com/setup_14.x | sudo -E bash -
 	yum update -y -q
 	yum install -y -q nodejs
 	yum install -y -q nginx
-	yum install -y -q graphicsmagick
+	yum install -y -q GraphicsMagick
 	yum install -y -q zip
 	yum install -y -q ftp
 	yum install -y -q unzip
@@ -89,6 +89,7 @@ if [[ "$userConsent" == "y" || "$userConsent" == "Y" ]]; then
 	yum install -y -q lsof
 	yum install -y -q socat
 	curl https://get.acme.sh | sh
+
 	mkdir /www/
 	mkdir /www/logs/
 	mkdir /www/nginx/
@@ -97,14 +98,22 @@ if [[ "$userConsent" == "y" || "$userConsent" == "Y" ]]; then
 	mkdir /www/www/
 	mkdir /www/superadmin/
 	mkdir /www/node_modules/
-        touch /www/superadmin/superadmin.log
+
+
 	cd /www/
+	npm install total4
+	npm install -g total4
 	npm install total.js
 	npm install -g total.js
+	npm install dbms
+	npm install pg
+
 
 	# Total.js downloads package and unpack
 	cd /www/superadmin/
-	tpm install "https://cdn.totaljs.com/superadmin.package?ts=$(date +%s)"
+	wget "https://raw.githubusercontent.com/totaljs/superadmin_templates/main/superadmin.zip"
+	unzip superadmin.zip
+	rm superadmin.zip
 
 	cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
 	cp /www/superadmin/ffdhe2048.pem /etc/nginx/ffdhe2048.pem
